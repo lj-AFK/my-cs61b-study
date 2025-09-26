@@ -114,6 +114,39 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
+        this.board.setViewingPerspective(side);
+        for(int i=0;i<board.size();i++) {
+            int bottom = this.size();
+            for(int j = board.size()-2;j>=0;j--){
+                int objet=0;
+                if(board.tile(i,j)!=null) {
+                    objet = board.tile(i,j).value();
+                }
+                if(objet!=0) {
+                    for(int low = j+1;low<=bottom;low++){
+                        if(board.tile(i,low)!=null) {
+                            if(board.tile(i,low).value() == objet){
+                                board.move(i,low,board.tile(i,j));
+                                score+=2*objet;
+                                bottom = low;
+                                break;
+                            }else{
+                                board.move(i,low,board.tile(i,j));
+                                break;
+                            }
+                        }else if(low == bottom-1){
+                            board.move(i,low,board.tile(i,j));
+                            break;
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+        board.setViewingPerspective(Side.NORTH);
+        changed = true;
         checkGameOver();
         if (changed) {
             setChanged();
